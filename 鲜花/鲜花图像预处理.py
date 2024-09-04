@@ -8,7 +8,10 @@ def resize_image(width, height, infile, outfile):
     # print(np.array(im))
     # print(im.size)
     out = im.resize((width,height),Image.Resampling.LANCZOS)
-    out.save(outfile)
+    if out.mode != 'RGB':
+        # 如果是 P 模式，尝试将其转换为 RGB 模式
+        out = out.convert('RGB')
+    out.save(outfile,format='JPEG')
 
     return out
 
@@ -38,6 +41,7 @@ def gamma_transfer(infile,outfile,power1 = 1):#power1: 伽马校正的幂指数�
     cv2.imwrite(outfile,out)
     return im
 
+#变换对比度
 def Contrast_and_Brightness(infile,outfile,alpha,beta):
     """使用公式f(x) = d.g(x) + b"""
     #a调节对比度，b调节亮度
@@ -58,12 +62,34 @@ def Contrast_and_Brightness(infile,outfile,alpha,beta):
     cv2.imwrite(outfile,dst)
     return dst 
 
-file1 = "D:\\learn-git\\gitee_repo\\鲜花\\picture"
-file2 = 'D:\\learn-git\\gitee_repo\\鲜花\\resize'
+file1 = "鲜花\\picture"
+file2 = '鲜花\\resize'
+file3 = '鲜花\\gray'
+if not os.path.exists(file3):
+    os.makedirs(file3)
+file4 = '鲜花\\strong'
+if not os.path.exists(file4):
+    os.makedirs(file4)
+file5 = '鲜花\\final'
+if not os.path.exists(file5):
+    os.makedirs(file5)
+
 # files1 = os.listdir("D:\\learn-git\\gitee_repo\\鲜花\\picture")
 # files2 = os.listdir('D:\\learn-git\\gitee_repo\\鲜花\\resize')
 for x in os.listdir(file1):
     infile = os.path.join(file1,x)
     outfile = os.path.join(file2,x)
-    re_image = resize_image(100,100,infile,outfile)
+    re_image = resize_image(200,200,infile,outfile)
+for x in os.listdir(file2):
+    infile = os.path.join(file2,x)
+    outfile = os.path.join(file3,x)
+    re_image = rgb2gray(infile,outfile)
+for x in os.listdir(file3):
+    infile = os.path.join(file3,x)
+    outfile = os.path.join(file4,x)
+    re_image = gamma_transfer(infile,outfile,2)
+for x in os.listdir(file4):
+    infile = os.path.join(file4,x)
+    outfile = os.path.join(file5,x)
+    re_image = Contrast_and_Brightness(infile,outfile,2,30)
 # rgb2gray(outfile,outfile)
