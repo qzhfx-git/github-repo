@@ -26,6 +26,9 @@ def rgb2gray(infile,outfile):
 def gamma_transfer(infile,outfile,power1 = 1):#power1: 伽马校正的幂指数，默认为1，即不进行校正。
     
     im = cv2.imread(infile)
+    if im is None:
+            print(f"无法读取文件: {infile}")
+            return None
     if len(im.shape) == 3:
         # 如果是彩色图像，将BGR格式转换为RGB格式
         # 因为OpenCV默认读取的图像格式是BGR，而许多图像处理操作通常使用RGB格式
@@ -62,15 +65,15 @@ def Contrast_and_Brightness(infile,outfile,alpha,beta):
     cv2.imwrite(outfile,dst)
     return dst 
 
-file1 = "鲜花\\picture"
-file2 = '鲜花\\resize'
-file3 = '鲜花\\gray'
+file1 = "flower\\picture\\"
+file2 = 'flower\\resize\\'
+file3 = 'flower\\gray\\'
 if not os.path.exists(file3):
     os.makedirs(file3)
-file4 = '鲜花\\strong'
+file4 = 'flower\\strong\\'
 if not os.path.exists(file4):
     os.makedirs(file4)
-file5 = '鲜花\\final'
+file5 = 'flower\\final\\'
 if not os.path.exists(file5):
     os.makedirs(file5)
 
